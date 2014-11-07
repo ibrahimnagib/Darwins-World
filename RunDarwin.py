@@ -12,7 +12,7 @@
 
 from random import seed
 import sys
-from Darwin3 import *
+from Darwin import *
 
 # ----
 # food
