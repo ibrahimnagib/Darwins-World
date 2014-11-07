@@ -1,15 +1,30 @@
 # Darwin.py
-
+# Ibrahim Nagib
+# In 2422
 import random
 
 
 class Darwin:
+    """
+    Class Darwin creates a board, creates lists for species, and creatures,
+    Darwin is responsible for adding creatures to the game, updating creatures, 
+    and moving the creatures on the board, only darwin knows what is on the board, 
+    and what is in front of each creature. 
+
+    """
     def __init__(self, x_axis, y_axis):
         self.x_axis = int(x_axis)
         self.y_axis = int(y_axis)
         self.species_list = []
         self.direction_list = []
         self.creature_list = []
+
+        """
+        empty space and wall are both made by creating a species 
+        instances of each so that the rest of the creatures can easily
+        and homogeneously communinicate with them through darwin
+
+        """
 
         empty = Species(".")
         wall = Species("*")
@@ -25,6 +40,11 @@ class Darwin:
 
 
     def place_creature(self, creature, start_x, start_y, direction):
+        """
+        places a new creature on the board,
+        also called when a creature is infected, 
+        ro re-initiate an instance of the infector
+        """
         self.board[(start_x + 1)][start_y + 1] = creature.species
         creature.direction = direction
         creature.xcord = start_x + 1
@@ -33,27 +53,16 @@ class Darwin:
         self.creature_list.append(creature)
         self.direction_list.append(direction)
 
-
-    def update_creature(self, c_index, s):
-        self.creature_list[c_index].species = s
-
-
-    # def if_wall(self, space_ahead, c_index):
-    # 	if space_ahead == wall:
-    # 		return True
-    # 	else:
-    # 		return False
-    # 	#print("wall")
+        """
+        Darwin has all of the controls and actions
+        so that only the game instance (Darwin class object)
+        has access to the board and al moves
+        """
 
     def if_empty(self, space_ahead, c_index):
         empty = Species(".")
-        #print ("if_empty")
-        # print("empty: ",empty)
-        # print("space: ",space_ahead)
         if space_ahead.name == empty.name:
-            #print("true")
             return True
-
         else:
             return False
 
@@ -63,18 +72,16 @@ class Darwin:
             return True
         else:
             return False
-        #print("if_random")
 
     def go(self, space_ahead, c_index):
-        #print('go')
         return True
 
 
     def if_enemy(self, space_ahead, c_index):
-        #print("if_enemy")
         empty = Species(".")
         wall = Species("*")
         s = self.creature_list[c_index].species
+
         if space_ahead.name == empty.name:
             return False
 
@@ -84,24 +91,13 @@ class Darwin:
         elif space_ahead.name == s.name:
             return False
 
-
-        #print("true")
         else:
-            #print("fasle")
             return True
-        # #print("if_enemy")
-        # empty = Species(".")
-        # s = self.creature_list[c_index].species
-        # if space_ahead.name == empty.name:
-        #           return False
 
-        #       elif space_ahead.name == s.name:
-        # 	return False
-        # 		#print("true")
-        # else:
-        # 		#print("fasle")
-        # 	return True
 
+    """
+    actions
+    """
     def infect(self, space_ahead, c_index):
         s = self.creature_list[c_index].species
         for x in self.creature_list:
@@ -124,8 +120,6 @@ class Darwin:
             c.direction = "north"
             return
 
-        #print("left")
-
     def right(self, space_ahead, c_index):
         c = self.creature_list[c_index]
         if c.direction == "north":
@@ -141,19 +135,14 @@ class Darwin:
             c.direction = "south"
             return
 
-
-        #print("right")
-
     def hop(self, space_ahead, c_index):
-        print("hop ", c_index)
         if self.if_empty(space_ahead, c_index) != True:
             return
         else:
             empty = Species(".")
             c = self.creature_list[c_index]
             self.board[c.xcord][c.ycord] = empty
-        #
-        #
+
         if c.direction == "north":
             c.xcord -= 1
         if c.direction == "south":
@@ -164,9 +153,13 @@ class Darwin:
             c.ycord += 1
         self.board[c.xcord][c.ycord] = c.species
 
-    #Darwin.update_creature(self.xcord,self.ycord,self.direction)
-
     def play_round(self, space_ahead, c_index):
+        """
+        used a for-loop for the play round function but 
+        added an integer j, that is used to determine the 
+        creature number that is playing the turn in the round,
+        the round terminates when i==j.
+        """
         j = 0
         s = self.creature_list[c_index].species
         for i in range(len(s.instruction_list)):
@@ -176,10 +169,8 @@ class Darwin:
             if " " in r:
                 r = r.split(" ")
                 command = getattr(Darwin, r[0])
-                #print(command)
                 if command(self, space_ahead, c_index) == True:
                     j = int(r[1])
-                    #print(j)
                     if j == 0:
                         break
                     continue
@@ -190,10 +181,12 @@ class Darwin:
 
 
     def show_board(self):
+        """
+        shows board by printing each array in the 2d array
+        on a new line, seperated by spaces
+        """
         for s in self.board:
             print(' '.join(x.symbol for x in s))
-        #print(s.split())
-        #print(self.board)
 
     def run(self, n):
         x = 0
@@ -203,7 +196,6 @@ class Darwin:
                 c = self.creature_list[j]
                 if c.direction == "north":
                     x = c.xcord - 1
-                    #print("y: ", y)
                     y = c.ycord
                 elif c.direction == "south":
                     x = c.xcord + 1
@@ -219,27 +211,38 @@ class Darwin:
                 temp_s.x = x
                 temp_s.y = y
                 self.play_round(temp_s, j)
-                #print("temp_s: ", temp_s)
-            print("Round: ", i)
-            self.show_board()
 
-
-
-            #self.update_creature(j,creature.g)
-
+            if self.x_axis<20:
+                print("Round: ", i)
+                self.show_board()
+            else:
+                if i<10:
+                    print("Round: ", i)
+                    self.show_board()
+                else:
+                    if i%100==0:
+                        print("Round: ", i)
+                        self.show_board()
 
     def __remove_creature(self, creature, space_ahead):
+        """
+        used for removing a creatures instance, and removing
+        that creature from the creature_list if it becomes 
+        infected
+        """
         self.creature_list.remove(creature)
         self.board[creature.xcord][creature.ycord] = Species(".")
         self.direction_list.remove(creature.direction)
 
 
 class Species:
+    """
+    class Species initiates a type species, each species has a unique
+    set of instructions, stored in the instruction_list in the Species
+    class, it also has a name, and a symbol which is simple name[0]
+    """
     def __init__(self, name):
-        """
 
-        :rtype : object
-        """
         self.name = name
         self.symbol = name[0]
         self.instruction_list = []
@@ -249,21 +252,23 @@ class Species:
     def __str__(self):
         return self.name
 
-    # def set_xy(self,x,y):
-    # 	self.x = x
-    # 	self.y = y
-
-    # def get_xy(self):
-    # 	return self.x, self.y
-
     def add_instruction(self, instruction):
+        """
+        adds instructions to the instruction_list
+        """
         self.instruction_list.append(instruction)
 
 
 class Creature:
+    """
+    class Creature is responsible for initiating
+    different instances of creatures that are of a certain species,
+    it takes as an argument, only the type of species, the starting 
+    coordinates of the creature are given to Darwin class when placing the creatures 
+    on the board.
+    """
     def __init__(self, species):
         self.species = species
-        #self.species.set_xy(xcord,ycord)
         self.direction = ''
         self.xcord = 0
         self.ycord = 0
@@ -271,85 +276,3 @@ class Creature:
 
     def __str__(self):
         return self.species
-
-
-# ----
-# food
-# ----
-food = Species("food")
-food.add_instruction("left")
-food.add_instruction(
-    "go 0")  #will have to code for these (split at space, first element is the function to do and the second element is n)
-
-# ------
-# hopper
-# ------
-
-hopper = Species("hopper")
-hopper.add_instruction("hop")
-hopper.add_instruction("go 0")
-
-# -----
-# rover
-# -----
-
-rover = Species("rover")
-rover.add_instruction("if_enemy 9")
-rover.add_instruction("if_empty 7")
-rover.add_instruction("if_random 5")
-rover.add_instruction("left")
-rover.add_instruction("go 0")
-rover.add_instruction("right")
-rover.add_instruction("go 0")
-rover.add_instruction("hop")
-rover.add_instruction("go 0")
-rover.add_instruction("infect")
-rover.add_instruction("go 0")
-
-# ----
-# trap
-# ----
-
-trap = Species("trap")
-trap.add_instruction("if_enemy 3")
-trap.add_instruction("left")
-trap.add_instruction("go 0")
-trap.add_instruction("infect")
-trap.add_instruction("go 0")
-
-print("*** Darwin 7x9 ***")
-
-#seed(0)
-
-Darwin7x9 = Darwin(7, 9)
-
-t1 = Creature(trap)
-h1 = Creature(hopper)
-r1 = Creature(rover)
-t2 = Creature(trap)
-
-Darwin7x9.place_creature(t1, 0, 0, "south")
-Darwin7x9.place_creature(h1, 3, 2, "east")
-Darwin7x9.place_creature(r1, 5, 4, "north")
-Darwin7x9.place_creature(t2, 6, 8, "west")
-Darwin7x9.show_board()
-Darwin7x9.run(60)
-
-# print("*** Darwin 8x8 ***")
-
-# Darwin8x8 = Darwin(8, 8)
-# f1 = Creature(food)
-# h1 = Creature(hopper)
-# h2 = Creature(hopper)
-# h3 = Creature(hopper)
-# h4 = Creature(hopper)
-# f2 = Creature(food)
-# Darwin8x8.place_creature(f1,0,0, "east")
-# Darwin8x8.place_creature(h1,3,3, "north")
-# Darwin8x8.place_creature(h2,3,4, "east")
-# Darwin8x8.place_creature(h3,4,4, "south")
-# Darwin8x8.place_creature(h4,4,3, "west")
-# Darwin8x8.place_creature(f2,7,7, "north")
-# Darwin8x8.show_board()
-# Darwin8x8.run(5)
-
