@@ -8,7 +8,7 @@
 from io import StringIO
 from unittest import main, TestCase
 
-from Darwin1 import Darwin, Creature, Species
+from Darwin import Darwin, Creature, Species
 
 # -----------
 # Test Darwin
