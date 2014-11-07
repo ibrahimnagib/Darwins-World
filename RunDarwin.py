@@ -117,7 +117,10 @@ Darwin8x8.place_creature(h3,4,4, "south")
 Darwin8x8.place_creature(h4,4,3, "west")
 Darwin8x8.place_creature(f2,7,7, "north")
 
-Darwin8x8.run(6)
+print("Round: 0")
+Darwin8x8.show_board()
+
+Darwin8x8.run(5)
 
 # ----------
 # darwin 7x9
@@ -139,7 +142,10 @@ Darwin7x9.place_creature(h1, 3, 2, "east")
 Darwin7x9.place_creature(r1, 5, 4, "north")
 Darwin7x9.place_creature(t2, 6, 8, "west")
 
-Darwin7x9.run(6)
+
+print("Round: 0")
+Darwin7x9.show_board()
+Darwin7x9.run(5)
 
 # ------------
 # darwin 72x72
@@ -290,7 +296,8 @@ Darwin72_wob.place_creature(t9,x,y,d)
 x, y, d = randomizer(72, 72)
 Darwin72_wob.place_creature(t10,x,y,d)
 
-
+print("Round: 0")
+Darwin72_wob.show_board()
 Darwin72_wob.run(1001)
 
 
@@ -480,5 +487,7 @@ Darwin72_wb.place_creature(b9,x,y,d)
 x, y, d = randomizer(72, 72)
 Darwin72_wb.place_creature(b10,x,y,d)
 
+print("Round: 0")
+Darwin72_wb.show_board()
 
 Darwin72_wb.run(1001)
