@@ -1,5 +1,6 @@
 # TestDarwin.py
-#ibrahim_nagib_IN2422
+# Ibrahim Nagib
+# In 2422
 
 # -------
 # imports
@@ -58,7 +59,36 @@ class TestDarwin (TestCase):
         s = Species("food")
         s.add_instruction("infect")
         s.add_instruction("hop")
-        self.assertEqual(s.instruction_list, ["infect", "hop"])
+        self.assertEqual(s.name, "food")
+
+    def test_Species_9(self):
+        trap = Species("trap")
+        self.assertEqual(trap.name, "trap")
+        self.assertEqual(trap.symbol, "t")
+
+
+    def test_Species_10(self):
+        s = Species("rover")
+        s.add_instruction("hop")
+        self.assertEqual(s.instruction_list[0], "hop")
+
+    def test_Species_11(self):
+        best = Species("best")
+        self.assertEqual(best.instruction_list, [])
+
+    def test_Species_12(self):
+        best = Species("best")
+        best.add_instruction("hop")
+        self.assertEqual(len(best.instruction_list), 1)
+        best.add_instruction("left")
+        self.assertEqual(len(best.instruction_list), 2)
+
+    def test_Species_13(self):
+        s = Species("food")
+        s.add_instruction("infect")
+        s.add_instruction("hop")
+        self.assertEqual(len(s.instruction_list), 2)
+
 
 
     # --------
@@ -108,8 +138,8 @@ class TestDarwin (TestCase):
         game.right(0,0)
         self.assertEqual(c.direction,"south")
 
-	def test_Darwin_6(self):
-		assert hasattr(Darwin, "place_creature")
+    def test_Darwin_6(self):
+        # assert hasattr(Darwin, "place_creature")
         game = Darwin(5,5)
         food = Species("food")
         b = Creature(food)
@@ -143,7 +173,7 @@ class TestDarwin (TestCase):
         self.assertEqual(c.direction,"west")
 
     def test_Darwin_9(self):
-        assert hasattr(Darwin, "if_wall")
+        assert hasattr(Darwin, "play_round")
         game = Darwin(5,5)
         food = Species("food")
         c = Creature(food)
@@ -182,8 +212,8 @@ class TestDarwin (TestCase):
         space = Species(".")
         game.place_creature(c,2,2,"south")
         self.assertEqual(c.direction,"south") 
-        v = game.if_enemy(c,0) 
-        self.assertEqual(v, True)
+        v = game.if_enemy(c.species,0) 
+        self.assertEqual(v, False)
 
     def test_Darwin_13(self):
         assert hasattr(Darwin, "run")
@@ -238,6 +268,22 @@ class TestDarwin (TestCase):
         r = Creature(rover)
         self.assertEqual(r.species.name, "rover")
         self.assertEqual(r.species.symbol, "r")
-    
+
+
+    # -------
+    # Game Testing
+    # -------
+
+
+
+    def test_game_1(self):
+        game = Darwin(4,4)
+        food = Species("food")
+        food.add_instruction("right")
+        food.add_instruction("go 0")
+        f1 = Creature(food)
+        game.place_creature(f1,2,2, "north")
+        self.assertNotEqual(game.run(4),[])
+
 
 main()
